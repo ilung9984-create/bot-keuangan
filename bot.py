@@ -9,7 +9,8 @@ Fitur:
 - Laporan laba rugi sederhana
 - /menu untuk daftar instruksi lengkap
 """
-
+from keep_alive import keep_alive
+keep_alive()
 import os
 import re
 import json
