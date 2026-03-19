@@ -120,7 +120,7 @@ def get_next_id(ws):
 
 
 def parse_nominal(s):
-    s = s.lower().strip().replace(",", ".")
+    s = s.lower().strip().replace(",", "")
     if "jt" in s or "juta" in s:
         num = re.sub(r"[^\d.]", "", s.replace("jt", "").replace("juta", ""))
         return int(float(num) * 1_000_000)
@@ -353,10 +353,23 @@ async def laporan_tanggal(update, tgl_str, label):
     if data:
         teks += "\n*10 Transaksi Terakhir:*\n"
         for r in data[-10:]:
-            icon = "🟢" if r["Tipe"] == "MASUK" else "🔴"
-            teks += f"{icon} {r['Deskripsi']}: {fmt(r['Nominal'])}\n"
-        if len(data) > 10:
-            teks += f"_...dan {len(data)-10} transaksi lainnya_\n"
+             icon  = "🟢" if hasil["tipe"] == "MASUK" else "🔴"
+    label = "Pemasukan" if hasil["tipe"] == "MASUK" else "Pengeluaran"
+
+    await update.message.reply_text(
+        f"{icon} *{label} Tercatat!* ✅\n"
+        f"━━━━━━━━━━━━━━━━━\n"
+        f"📝 {hasil['deskripsi'].capitalize()}\n"
+        f"💵 Nominal  : *{fmt(hasil['nominal'])}*\n"
+        f"🏷️ Kategori : {kat}\n"
+        f"🕐 Waktu    : {wkt} | {tgl}\n"
+        f"━━━━━━━━━━━━━━━━━\n"
+        f"📊 *Rekap Hari Ini ({jml_tx} transaksi)*\n"
+        f"🟢 Total Masuk  : *{fmt(t_masuk)}*\n"
+        f"🔴 Total Keluar : *{fmt(t_keluar)}*\n"
+        f"📈 Laba Hari Ini: *{fmt(laba_hari)}*",
+        parse_mode="Markdown"
+    )
     else:
         teks += "\n_Tidak ada transaksi._"
 
